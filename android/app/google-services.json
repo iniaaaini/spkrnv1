@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "192750202235",
+    "project_id": "sipakarena",
+    "storage_bucket": "sipakarena.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:192750202235:android:8b2a55e72586b0ce4ee1de",
+        "android_client_info": {
+          "package_name": "com.example.sipakarena"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3dIkMm9iP5R5Erw39iOVya5L4nz7RyhE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
