@@ -157,7 +157,7 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                       const SizedBox(height: 15),
                       Text(
-                        'Sistem Pengawasan Kualitas Gula Aren',
+                        'Sistem Pengolahan Gula Aren Kendali Otomatis dan Realtime Berbasis IOT',
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.white.withOpacity(0.9),

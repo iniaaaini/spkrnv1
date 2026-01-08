@@ -325,6 +325,8 @@ class MyApp extends StatelessWidget {
 
 // ================== SLIDER CARD ===================
 class SpeedControlCard extends StatefulWidget {
+  const SpeedControlCard({super.key});
+
   @override
   _SpeedControlCardState createState() => _SpeedControlCardState();
 }

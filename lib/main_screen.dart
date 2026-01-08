@@ -1,6 +1,8 @@
+// main_screen.dart
 import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
 import 'screens/production_history_screen.dart';
+import '../services/storage_service.dart'; // Tambahkan import ini
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -11,8 +13,9 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateMixin {
   int _currentIndex = 0;
-  final List<Map<String, dynamic>> _productionRecords = [];
+  List<Map<String, dynamic>> _productionRecords = []; // Ubah dari final ke var
   late List<Widget> _screens;
+  final StorageService _storageService = StorageService(); // Tambahkan ini
   
   // Animation controller untuk transisi halus
   late AnimationController _animationController;
@@ -21,6 +24,9 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
   @override
   void initState() {
     super.initState();
+    
+    // Load data dari storage terlebih dahulu
+    _loadStoredData();
     
     // Setup animation controller
     _animationController = AnimationController(
@@ -36,30 +42,59 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
       curve: Curves.easeInOut,
     ));
     
-    // Initialize screens
-    _screens = [
-      HomeScreen(
-        productionRecords: _productionRecords,
-        onProductionRecordsUpdated: _updateProductionRecords,
-      ),
-      ProductionHistoryScreen(productionRecords: _productionRecords),
-    ];
+    // Initialize screens dengan data yang sudah di-load
+    _initializeScreens();
     
     // Start animation
     _animationController.forward();
+  }
+
+  // Method untuk load data dari storage
+  Future<void> _loadStoredData() async {
+    try {
+      final records = await _storageService.loadProductionRecords();
+      if (mounted) {
+        setState(() {
+          _productionRecords = records;
+          print('📂 Loaded ${_productionRecords.length} records from storage');
+        });
+        // Update screens setelah data loaded
+        _initializeScreens();
+      }
+    } catch (e) {
+      print('❌ Error loading data: $e');
+    }
+  }
+
+  // Method untuk initialize screens
+  void _initializeScreens() {
+    _screens = [
+      HomeScreen(
+        productionRecords: _productionRecords,
+        onProductionRecordsUpdated: _updateAndSaveProductionRecords,
+      ),
+      ProductionHistoryScreen(
+        productionRecords: _productionRecords,
+        onProductionRecordsUpdated: _updateAndSaveProductionRecords,
+      ),
+    ];
+  }
+
+  // Method untuk update dan simpan data ke storage
+  Future<void> _updateAndSaveProductionRecords(List<Map<String, dynamic>> records) async {
+    setState(() {
+      _productionRecords = List.from(records);
+    });
+    
+    // Simpan ke SharedPreferences
+    await _storageService.saveProductionRecords(_productionRecords);
+    print('💾 Saved ${_productionRecords.length} records to storage');
   }
 
   @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
-  }
-
-  void _updateProductionRecords(List<Map<String, dynamic>> records) {
-    setState(() {
-      _productionRecords.clear();
-      _productionRecords.addAll(records);
-    });
   }
 
   void _onTabTapped(int index) {
@@ -203,75 +238,3 @@ class _MainScreenState extends State<MainScreen> with SingleTickerProviderStateM
     );
   }
 }
-
-// Alternatif simpler version jika yang di atas terlalu kompleks:
-/*
-class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
-
-  @override
-  State<MainScreen> createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> {
-  int _currentIndex = 0;
-  final List<Map<String, dynamic>> _productionRecords = [];
-  late List<Widget> _screens;
-
-  @override
-  void initState() {
-    super.initState();
-    _screens = [
-      HomeScreen(
-        productionRecords: _productionRecords,
-        onProductionRecordsUpdated: _updateProductionRecords,
-      ),
-      ProductionHistoryScreen(productionRecords: _productionRecords),
-    ];
-  }
-
-  void _updateProductionRecords(List<Map<String, dynamic>> records) {
-    setState(() {
-      _productionRecords.clear();
-      _productionRecords.addAll(records);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF7E4C27),
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _screens,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        backgroundColor: const Color(0xFFFDF7EF),
-        selectedItemColor: const Color(0xFF7E4C27),
-        unselectedItemColor: Colors.grey,
-        selectedLabelStyle: const TextStyle(
-          fontFamily: 'Poppins',
-          fontWeight: FontWeight.bold,
-        ),
-        unselectedLabelStyle: const TextStyle(fontFamily: 'Poppins'),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Beranda',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history),
-            label: 'Histori',
-          ),
-        ],
-      ),
-    );
-  }
-}
-*/

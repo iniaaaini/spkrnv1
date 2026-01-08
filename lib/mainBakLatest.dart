@@ -353,6 +353,8 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class SpeedControlCard extends StatefulWidget {
+  const SpeedControlCard({super.key});
+
   @override
   _SpeedControlCardState createState() => _SpeedControlCardState();
 }

@@ -13,7 +13,7 @@ class InfoCard extends StatelessWidget {
     required this.title,
     required this.value,
     this.iconSize = 41,
-    this.fontSize = 24,
+    this.fontSize = 14,
   });
 
   @override
@@ -38,7 +38,7 @@ class InfoCard extends StatelessWidget {
                 Text(
                   title,
                   style: const TextStyle(
-                    fontSize: 15,
+                    fontSize: 12,
                     color: Color(0xFF7E4C27),
                     fontFamily: 'Poppins',
                   ),
