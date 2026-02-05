@@ -5,8 +5,8 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 android {
-    namespace = "com.example.sipakarena"
-    compileSdk = 36
+    namespace = "com.company.sipakarenaFuzzy"
+    compileSdk = 34
     ndkVersion = "27.0.12077973"
 
     compileOptions {
@@ -20,9 +20,9 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.sipakarena"
-        minSdk = flutter.minSdkVersion
-        targetSdk = 36
+        applicationId = "com.company.sipakarenaFuzzy"
+        minSdk = 21
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
         multiDexEnabled = true
